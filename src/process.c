@@ -327,7 +327,7 @@ mrb_spawn_internal(mrb_state *mrb, mrb_value klass)
   pid_t pid;
   char **p;
 
-  eargp = mrb_execarg_new(mrb);
+  eargp = mrb_spawnarg_new(mrb);
 
   if (eargp->envp)
     pid = spawnve(eargp->filename, eargp->argv, eargp->envp, eargp->fd.in, eargp->fd.out, eargp->fd.err);
@@ -400,7 +400,7 @@ mrb_mruby_process_gem_init(mrb_state *mrb)
   mrb_define_class_method(mrb, p, "exit",     mrb_f_exit,    MRB_ARGS_OPT(1));
   mrb_define_class_method(mrb, p, "exit!",    mrb_f_exit_bang, MRB_ARGS_OPT(1));
   mrb_define_class_method(mrb, p, "kill",     mrb_f_kill,    MRB_ARGS_REQ(2)|MRB_ARGS_REST());
-  mrb_define_class_method(mrb, p, "exec",     mrb_f_exec,    MRB_ARGS_REQ(1)|MRB_ARGS_REST());
+  mrb_define_class_method(mrb, p, "exec",     mrb_f_exec,    MRB_ARGS_ARG(1,1));
   mrb_define_class_method(mrb, p, "waitpid",  mrb_f_wait,    MRB_ARGS_OPT(2));
   mrb_define_class_method(mrb, p, "waitpid2", mrb_f_wait2,   MRB_ARGS_OPT(2));
   mrb_define_class_method(mrb, p, "wait",     mrb_f_wait,    MRB_ARGS_OPT(2));

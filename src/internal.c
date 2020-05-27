@@ -49,6 +49,36 @@ struct mrb_execarg*
 mrb_execarg_new(mrb_state *mrb)
 {
     mrb_int argc;
+    mrb_value *argv, filename;
+    struct mrb_execarg *eargp;
+    char **result;
+    int ai;
+
+    mrb_get_args(mrb, "S|a", &filename, &argv, &argc);
+
+    eargp = malloc(sizeof(struct mrb_execarg));
+
+    result = (char **)mrb_malloc(mrb, sizeof(char *) * (argc + 2));
+
+    ai = mrb_gc_arena_save(mrb);
+    result[0] = (char*)mrb_string_value_cstr(mrb, &filename);
+    if (argc > 0) {
+        mrb_execarg_argv_to_strv(mrb, argv, argc, &result[1]);
+    }
+    mrb_gc_arena_restore(mrb, ai);
+
+    eargp->envp     = NULL;
+    eargp->filename = result[0];
+    eargp->argv     = result;
+    eargp->argc     = argc + 1;
+
+    return eargp;
+}
+
+struct mrb_execarg*
+mrb_spawnarg_new(mrb_state *mrb)
+{
+    mrb_int argc;
     mrb_value *argv, env, opts;
     struct mrb_execarg *eargp;
 
